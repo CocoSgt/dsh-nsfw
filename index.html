@@ -47,6 +47,8 @@
   .nav a.plain { color: var(--text-dim); font-size: 15px; }
   .nav a.plain:hover { color: #fff; }
   .gh-star { vertical-align: middle; }
+  .gh-star.small { display: none; }
+  code { overflow-wrap: anywhere; }
   .btn-upload {
     background: var(--orange); color: #000 !important; font-weight: 700;
     padding: 7px 18px; border-radius: 20px; font-size: 15px;
@@ -123,6 +125,24 @@
   }
   footer p { max-width: 760px; margin: 0 auto 8px; }
   .empty { color: var(--text-dim); text-align: center; padding: 60px 0; }
+
+  @media (max-width: 640px) {
+    .nav { gap: 12px; padding: 10px 14px; }
+    .logo { font-size: 21px; }
+    .logo .box { padding: 1px 8px; }
+    .nav a.plain { display: none; }
+    .gh-star { display: none; }
+    .gh-star.small { display: inline; }
+    .btn-upload { padding: 6px 14px; font-size: 14px; }
+    .hero { padding: 30px 16px 18px; }
+    .hero h1 { font-size: 25px; }
+    .hero p { font-size: 14px; }
+    main { padding: 10px 14px 50px; }
+    .section-title { font-size: 18px; margin: 20px 0 12px; }
+    .viewer-topbar { flex-wrap: wrap; row-gap: 4px; }
+    .viewer-topbar h2 { font-size: 18px; }
+    .pager-btn { padding: 7px 16px; }
+  }
 </style>
 </head>
 <body>
@@ -137,6 +157,10 @@
     <iframe class="gh-star"
       src="https://ghbtns.com/github-btn.html?user=CocoSgt&repo=dsh-nsfw&type=star&count=true&size=large"
       width="150" height="30" frameborder="0" scrolling="0"
+      title="GitHub Stars" loading="lazy" allowtransparency="true"></iframe>
+    <iframe class="gh-star small"
+      src="https://ghbtns.com/github-btn.html?user=CocoSgt&repo=dsh-nsfw&type=star&count=true"
+      width="90" height="20" frameborder="0" scrolling="0"
       title="GitHub Stars" loading="lazy" allowtransparency="true"></iframe>
     <a class="btn-upload" href="#upload">上传漫画</a>
   </div>
