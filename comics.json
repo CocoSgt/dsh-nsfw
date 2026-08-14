@@ -1,54 +1,22 @@
 {
   "comics": [
     {
-      "id": "whale-morning",
-      "title": "鲸晨咖啡",
-      "author": "r05En1cU",
+      "id": "plugins-explode",
+      "title": "大家的插件都会炸",
+      "author": "CocoSgt",
       "date": "2026-08-14",
-      "tags": [
-        "日常",
-        "治愈",
-        "咖啡"
-      ],
-      "cover": "comics/whale-morning/p1.svg",
-      "pages": [
-        "comics/whale-morning/p1.svg",
-        "comics/whale-morning/p2.svg",
-        "comics/whale-morning/p3.svg",
-        "comics/whale-morning/p4.svg"
-      ]
+      "tags": ["程序员", "沙雕"],
+      "cover": "comics/plugins-explode/p1.jpg",
+      "pages": ["comics/plugins-explode/p1.jpg"]
     },
     {
-      "id": "hello-whale",
-      "title": "你好,鲸",
-      "author": "cocosgt",
+      "id": "yupian-resource",
+      "title": "鱼片?还真没看过",
+      "author": "CocoSgt",
       "date": "2026-08-14",
-      "tags": [
-        "相遇",
-        "治愈"
-      ],
-      "cover": "comics/hello-whale/p1.svg",
-      "pages": [
-        "comics/hello-whale/p1.svg",
-        "comics/hello-whale/p2.svg",
-        "comics/hello-whale/p3.svg"
-      ]
-    },
-    {
-      "id": "whale-overtime",
-      "title": "鲸天加班",
-      "author": "cocosgt",
-      "date": "2026-08-14",
-      "tags": [
-        "日常",
-        "程序员"
-      ],
-      "cover": "comics/whale-overtime/p1.svg",
-      "pages": [
-        "comics/whale-overtime/p1.svg",
-        "comics/whale-overtime/p2.svg",
-        "comics/whale-overtime/p3.svg"
-      ]
+      "tags": ["沙雕", "日常"],
+      "cover": "comics/yupian-resource/p1.png",
+      "pages": ["comics/yupian-resource/p1.png"]
     }
   ]
 }
