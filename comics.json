@@ -1,6 +1,24 @@
 {
   "comics": [
     {
+      "id": "whale-morning",
+      "title": "鲸晨咖啡",
+      "author": "r05En1cU",
+      "date": "2026-08-14",
+      "tags": [
+        "日常",
+        "治愈",
+        "咖啡"
+      ],
+      "cover": "comics/whale-morning/p1.svg",
+      "pages": [
+        "comics/whale-morning/p1.svg",
+        "comics/whale-morning/p2.svg",
+        "comics/whale-morning/p3.svg",
+        "comics/whale-morning/p4.svg"
+      ]
+    },
+    {
       "id": "hello-whale",
       "title": "你好,鲸",
       "author": "cocosgt",

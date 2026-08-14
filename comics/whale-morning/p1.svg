@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" font-family="'PingFang SC','Hiragino Sans GB','Noto Sans SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#BFD9FF"/>
+      <stop offset="1" stop-color="#EAF4FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- room -->
+  <rect width="900" height="640" fill="#F6F3FF"/>
+  <rect y="470" width="900" height="170" fill="#EDE7FA"/>
+
+  <!-- window -->
+  <rect x="60" y="80" width="250" height="230" rx="14" fill="#FFFFFF" stroke="#C7CFF0" stroke-width="6"/>
+  <rect x="70" y="90" width="230" height="210" rx="8" fill="url(#sky)"/>
+  <circle cx="130" cy="140" r="26" fill="#FFE08A"/>
+  <ellipse cx="200" cy="150" rx="34" ry="14" fill="#FFFFFF" opacity="0.9"/>
+  <ellipse cx="230" cy="140" rx="20" ry="11" fill="#FFFFFF" opacity="0.9"/>
+  <ellipse cx="150" cy="200" rx="26" ry="11" fill="#FFFFFF" opacity="0.85"/>
+  <rect x="182" y="90" width="8" height="210" fill="#E8ECFA"/>
+  <rect x="70" y="188" width="230" height="8" fill="#E8ECFA"/>
+
+  <!-- bedside table + alarm clock -->
+  <rect x="288" y="432" width="88" height="20" rx="6" fill="#C9A07A"/>
+  <rect x="300" y="452" width="10" height="26" fill="#A9845C"/>
+  <rect x="364" y="452" width="10" height="26" fill="#A9845C"/>
+  <circle cx="340" cy="405" r="30" fill="#FFFFFF" stroke="#3A52D6" stroke-width="4"/>
+  <circle cx="325" cy="377" r="8" fill="#FFD166"/>
+  <circle cx="355" cy="377" r="8" fill="#FFD166"/>
+  <rect x="337" y="369" width="6" height="12" rx="3" fill="#E0A83C"/>
+  <line x1="340" y1="405" x2="340" y2="390" stroke="#2B3A8F" stroke-width="4" stroke-linecap="round"/>
+  <line x1="340" y1="405" x2="353" y2="408" stroke="#2B3A8F" stroke-width="3" stroke-linecap="round"/>
+  <text x="340" y="428" text-anchor="middle" font-size="15" font-weight="bold" fill="#2B3A8F">7:00</text>
+
+  <!-- bed -->
+  <rect x="800" y="380" width="70" height="150" rx="16" fill="#A8B7FF"/>
+  <rect x="378" y="420" width="445" height="95" rx="22" fill="#FFFFFF" stroke="#DCDCF2" stroke-width="4"/>
+  <rect x="730" y="385" width="120" height="60" rx="18" fill="#F0EEFF" stroke="#DCDCF2" stroke-width="3"/>
+
+  <!-- whale girl sitting up in bed -->
+  <ellipse cx="490" cy="285" rx="100" ry="105" fill="#5B7BFA"/>
+  <circle cx="490" cy="300" r="92" fill="#FFE9D6"/>
+  <path d="M398,290 Q410,195 490,195 Q570,195 582,290 Q560,268 540,282 Q528,262 508,278 Q496,260 476,276 Q460,262 448,278 Q428,266 398,290 Z" fill="#5B7BFA"/>
+  <path d="M398,290 Q392,330 400,360 Q412,350 415,330 Z" fill="#5B7BFA"/>
+  <path d="M582,290 Q588,330 580,360 Q568,350 565,330 Z" fill="#5B7BFA"/>
+  <path d="M490,175 C470,150 455,165 467,190 C475,205 487,208 490,205 C493,208 505,205 513,190 C525,165 510,150 490,175 Z" fill="#4D6BFE"/>
+  <path d="M440,215 Q470,200 520,215 Q490,205 440,215 Z" fill="#8FA4FF" opacity="0.8"/>
+  <path d="M450,320 Q470,330 490,320" stroke="#2B3A8F" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M490,320 Q510,330 530,320" stroke="#2B3A8F" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="490" cy="350" rx="7" ry="9" fill="#C98A6B"/>
+  <ellipse cx="445" cy="345" rx="15" ry="8" fill="#FFB3B3" opacity="0.75"/>
+  <ellipse cx="535" cy="345" rx="15" ry="8" fill="#FFB3B3" opacity="0.75"/>
+  <rect x="478" y="385" width="24" height="24" rx="8" fill="#FFE9D6"/>
+  <path d="M430,400 L550,400 L565,500 Q490,520 415,500 Z" fill="#4D6BFE"/>
+  <path d="M430,400 L550,400 L538,430 L442,430 Z" fill="#FFFFFF" opacity="0.9"/>
+  <rect x="466" y="430" width="48" height="66" rx="14" fill="#6E8BFF"/>
+  <circle cx="415" cy="470" r="16" fill="#FFE9D6"/>
+  <circle cx="565" cy="470" r="16" fill="#FFE9D6"/>
+
+  <!-- blanket covers her -->
+  <rect x="378" y="480" width="325" height="70" rx="20" fill="#A8B7FF"/>
+  <rect x="378" y="480" width="325" height="16" rx="8" fill="#FFFFFF"/>
+
+  <!-- sleepy Zzz -->
+  <text x="600" y="260" font-size="40" font-weight="bold" fill="#8FA4FF">Z</text>
+  <text x="632" y="228" font-size="30" font-weight="bold" fill="#8FA4FF">Z</text>
+  <text x="656" y="202" font-size="22" font-weight="bold" fill="#8FA4FF">Z</text>
+
+  <!-- little whale sleeping on the floor -->
+  <ellipse cx="170" cy="560" rx="95" ry="12" fill="#D8CFF0"/>
+  <path d="M88,505 Q58,492 52,505 Q60,518 90,516 Z" fill="#6E8BFF"/>
+  <ellipse cx="170" cy="505" rx="85" ry="50" fill="#6E8BFF"/>
+  <ellipse cx="190" cy="520" rx="58" ry="26" fill="#D6DFFF"/>
+  <path d="M215,498 Q225,504 235,498" stroke="#2B3A8F" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M150,455 Q160,438 172,448 Q166,458 154,462 Z" fill="#3A52D6"/>
+  <text x="100" y="445" font-size="24" font-weight="bold" fill="#8FA4FF">Z</text>
+
+  <!-- speech bubble -->
+  <path d="M300,214 L330,252 L360,214 Z" fill="#FFFFFF"/>
+  <rect x="120" y="130" width="330" height="84" rx="26" fill="#FFFFFF" stroke="#4D6BFE" stroke-width="5"/>
+  <text x="285" y="181" text-anchor="middle" font-size="28" font-weight="bold" fill="#2B3A8F">早安……再睡五分钟……</text>
+</svg>
