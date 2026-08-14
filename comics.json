@@ -1,22 +1,45 @@
 {
   "comics": [
     {
+      "id": "moderation-test",
+      "title": "审核测试",
+      "author": "CocoSgt",
+      "date": "2026-08-14",
+      "tags": [
+        "测试"
+      ],
+      "cover": "comics/moderation-test/p1.png",
+      "pages": [
+        "comics/moderation-test/p1.png"
+      ]
+    },
+    {
       "id": "plugins-explode",
       "title": "大家的插件都会炸",
       "author": "CocoSgt",
       "date": "2026-08-14",
-      "tags": ["程序员", "沙雕"],
+      "tags": [
+        "程序员",
+        "沙雕"
+      ],
       "cover": "comics/plugins-explode/p1.jpg",
-      "pages": ["comics/plugins-explode/p1.jpg"]
+      "pages": [
+        "comics/plugins-explode/p1.jpg"
+      ]
     },
     {
       "id": "yupian-resource",
       "title": "鱼片?还真没看过",
       "author": "CocoSgt",
       "date": "2026-08-14",
-      "tags": ["沙雕", "日常"],
+      "tags": [
+        "沙雕",
+        "日常"
+      ],
       "cover": "comics/yupian-resource/p1.png",
-      "pages": ["comics/yupian-resource/p1.png"]
+      "pages": [
+        "comics/yupian-resource/p1.png"
+      ]
     }
   ]
 }
