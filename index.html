@@ -227,8 +227,15 @@
     display: flex; align-items: center; gap: 6px;
   }
   .card .byline .like { margin-left: auto; }
-  .author { color: var(--text-dim); }
+  .author {
+    color: var(--text-dim);
+    display: inline-flex; align-items: center; gap: 7px;
+  }
   .author:hover { color: var(--orange); text-decoration: underline; }
+  .author .avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: block; background: #2a2a2a; flex-shrink: 0;
+  }
   .load-more {
     display: block; margin: 26px auto 0;
     background: var(--card); color: var(--text); border: none;
@@ -686,8 +693,11 @@ function likeComic(id, ev) {
 
 function authorHtml(c) {
   if (!c.author) return esc(t().anon)
-  return `<a class="author" href="https://github.com/${encodeURIComponent(c.author)}"
-    target="_blank" rel="noopener" onclick="event.stopPropagation()">${esc(c.author)}</a>`
+  const u = encodeURIComponent(c.author)
+  return `<a class="author" href="https://github.com/${u}"
+    target="_blank" rel="noopener" onclick="event.stopPropagation()"><img class="avatar"
+    src="https://github.com/${u}.png?size=48" alt="" loading="lazy"
+    onerror="this.style.display='none'">${esc(c.author)}</a>`
 }
 
 function likeHtml(id) {
