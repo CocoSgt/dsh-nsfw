@@ -19,8 +19,9 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-API_URL = "https://api.openai.com/v1/chat/completions"
-MODEL = os.environ.get("OPENAI_MODEL", "gpt-5.6-luna")
+BASE_URL = (os.environ.get("OPENAI_BASE_URL") or "https://api.openai.com/v1").rstrip("/")
+API_URL = f"{BASE_URL}/chat/completions"
+MODEL = os.environ.get("OPENAI_MODEL") or "gpt-5.6-luna"
 
 POLICY = """你是「鲸漫天堂」(dsh-nsfw.com)的内容审核员。这是一个全年龄向的 \
 DeepSeek 鲸鱼娘同人漫画站,所有投稿经你审核后自动上线,请严格把关。
