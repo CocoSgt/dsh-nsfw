@@ -110,16 +110,49 @@
   }
   .notice b { color: var(--orange); }
 
-  /* ---------- hero:像素鲸 + 一键投稿框 ---------- */
-  .hero { max-width: 1100px; margin: 0 auto; padding: 30px 20px 6px; }
-  .hero-row {
-    display: flex; align-items: center; gap: 34px;
-    max-width: 860px; margin: 0 auto;
+  /* ---------- hero:像素鱼水族缸 + 一键投稿框 ---------- */
+  .hero { max-width: 1100px; margin: 0 auto; padding: 14px 20px 6px; }
+  .tank {
+    position: relative; overflow: hidden;
+    height: clamp(96px, 15vw, 150px);
+    margin-bottom: 12px;
+  }
+  .fish {
+    position: absolute; width: var(--w);
+    animation: swim var(--dur) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    will-change: left;
+  }
+  .fish svg { width: 100%; height: auto; display: block; }
+  .fish .flip {
+    animation: face var(--dur) linear infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  .fish .bob { animation: fishbob 2.6s ease-in-out infinite alternate; }
+  .fish .b { fill: var(--fish-color, var(--orange)); }
+  .fish .spout rect { fill: var(--spout-color, #fff); }
+  .fish .spout {
+    opacity: 0; transform-box: fill-box; transform-origin: 50% 100%;
+    animation: spoutburst 4.6s ease-out infinite;
+    animation-delay: var(--spout-delay, 0s);
+  }
+  .f1 { --w: clamp(88px, 11vw, 128px); --dur: 26s; top: 4%; left: 8%; }
+  .f2 {
+    --w: clamp(54px, 7vw, 82px); --dur: 17s; --delay: -5s;
+    --spout-delay: -2.2s; --fish-color: #fff; --spout-color: var(--orange);
+    top: 52%; left: 58%;
+  }
+  @keyframes swim { 0%, 100% { left: 0; } 50% { left: calc(100% - var(--w)); } }
+  @keyframes face { 0%, 49.99% { transform: scaleX(1); } 50%, 100% { transform: scaleX(-1); } }
+  @keyframes fishbob { from { transform: translateY(0); } to { transform: translateY(7px); } }
+  @keyframes spoutburst {
+    0%, 68% { opacity: 0; transform: translateY(1px) scaleY(.2); }
+    76% { opacity: 1; transform: translateY(0) scaleY(1); }
+    88% { opacity: 1; transform: translateY(-.3px) scaleY(1); }
+    100% { opacity: 0; transform: translateY(-1px) scaleY(.8); }
   }
   .pixel-whale { width: 150px; flex-shrink: 0; image-rendering: pixelated; }
-  .pixel-whale .bob { animation: bob 3.2s ease-in-out infinite alternate; }
-  @keyframes bob { from { transform: translateY(0); } to { transform: translateY(4px); } }
-  .hero-cta { flex: 1; min-width: 0; }
+  .hero-cta { max-width: 640px; margin: 0 auto; text-align: center; }
   .hero-cta .hint { font-size: 14px; color: var(--text-dim); margin-bottom: 8px; }
   .hero-cta .hint b { color: var(--orange); font-weight: 700; }
   .copy-row {
@@ -323,9 +356,11 @@
     .toolbar { flex-direction: column; }
     .toolbar .chips { width: 100%; }
     .sort-controls { margin-left: 0; justify-content: flex-start; }
-    .hero { padding: 22px 14px 2px; }
-    .hero-row { flex-direction: column; gap: 14px; text-align: center; }
-    .pixel-whale { width: 110px; }
+    .hero { padding: 12px 14px 2px; }
+    .tank { height: clamp(80px, 22vw, 110px); margin-bottom: 8px; }
+    .f1 { --w: clamp(72px, 18vw, 96px); }
+    .f2 { --w: clamp(44px, 12vw, 62px); }
+    .pixel-whale { width: 96px; }
     .hero-cta { width: 100%; }
     .copy-row code { font-size: 12px; }
     .modal-box { margin: 10vh 14px 0; }
@@ -395,15 +430,36 @@
 
 <section id="gallery-view">
   <div class="hero">
-    <div class="hero-row">
-      <svg class="pixel-whale" viewBox="0 0 16 12" aria-hidden="true"><use href="#pixel-whale-sym"/></svg>
-      <div class="hero-cta">
-        <p class="hint"></p>
-        <div class="copy-row">
-          <span class="prompt-mark" aria-hidden="true">&gt;_</span>
-          <code class="prompt-text"></code>
-          <button class="copy-btn" onclick="copyPrompt(this)">一键投稿</button>
-        </div>
+    <div class="tank" aria-hidden="true">
+      <div class="fish f1"><div class="flip"><div class="bob">
+        <svg viewBox="0 0 16 12"><g shape-rendering="crispEdges">
+          <g class="spout"><rect x="12" y="0" width="1" height="1"/><rect x="14" y="0" width="1" height="1"/><rect x="13" y="1" width="1" height="2"/></g>
+          <rect class="b" x="5" y="3" width="8" height="1"/><rect class="b" x="4" y="4" width="10" height="1"/>
+          <rect class="b" x="3" y="5" width="12" height="3"/><rect class="b" x="4" y="8" width="10" height="1"/>
+          <rect class="b" x="5" y="9" width="8" height="1"/><rect class="b" x="2" y="5" width="1" height="2"/>
+          <rect class="b" x="1" y="4" width="1" height="1"/><rect class="b" x="0" y="3" width="1" height="1"/>
+          <rect class="b" x="1" y="7" width="1" height="1"/><rect class="b" x="0" y="8" width="1" height="1"/>
+          <rect x="12" y="5" width="1" height="1" fill="#000"/><rect x="9" y="8" width="3" height="1" fill="#000"/>
+        </g></svg>
+      </div></div></div>
+      <div class="fish f2"><div class="flip"><div class="bob">
+        <svg viewBox="0 0 16 12"><g shape-rendering="crispEdges">
+          <g class="spout"><rect x="12" y="0" width="1" height="1"/><rect x="14" y="0" width="1" height="1"/><rect x="13" y="1" width="1" height="2"/></g>
+          <rect class="b" x="5" y="3" width="8" height="1"/><rect class="b" x="4" y="4" width="10" height="1"/>
+          <rect class="b" x="3" y="5" width="12" height="3"/><rect class="b" x="4" y="8" width="10" height="1"/>
+          <rect class="b" x="5" y="9" width="8" height="1"/><rect class="b" x="2" y="5" width="1" height="2"/>
+          <rect class="b" x="1" y="4" width="1" height="1"/><rect class="b" x="0" y="3" width="1" height="1"/>
+          <rect class="b" x="1" y="7" width="1" height="1"/><rect class="b" x="0" y="8" width="1" height="1"/>
+          <rect x="12" y="5" width="1" height="1" fill="#000"/><rect x="9" y="8" width="3" height="1" fill="#000"/>
+        </g></svg>
+      </div></div></div>
+    </div>
+    <div class="hero-cta">
+      <p class="hint"></p>
+      <div class="copy-row">
+        <span class="prompt-mark" aria-hidden="true">&gt;_</span>
+        <code class="prompt-text"></code>
+        <button class="copy-btn" onclick="copyPrompt(this)">一键投稿</button>
       </div>
     </div>
   </div>
