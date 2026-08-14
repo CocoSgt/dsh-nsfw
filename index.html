@@ -577,7 +577,7 @@ function esc(s) {
 async function boot() {
   setLang(LANG)
   try {
-    const res = await fetch('comics.json')
+    const res = await fetch('comics.json', { cache: 'no-store' })
     const data = await res.json()
     comics = data.comics || []
   } catch (e) {
