@@ -178,6 +178,18 @@
   .chip:hover { color: var(--text); background: var(--card-hover); }
   .chip.active { color: #000; background: var(--orange); font-weight: 700; }
   .chip small { opacity: .7; margin-left: 4px; }
+  .sortbar { margin-bottom: 10px; }
+  .sortbar .sep { width: 1px; align-self: stretch; background: var(--border); margin: 2px 4px; }
+
+  .like {
+    display: inline-flex; align-items: center; gap: 5px;
+    color: var(--text-dim); font-size: 13px; cursor: pointer; user-select: none;
+    transition: color .15s ease, transform .1s ease;
+  }
+  .like:hover { color: var(--orange); }
+  .like:active { transform: scale(1.2); }
+  .like.liked { color: var(--orange); cursor: default; }
+  .like b { font-weight: 600; font-size: 12px; }
 
   .grid {
     display: grid; gap: 16px;
@@ -200,7 +212,11 @@
     transition: color .15s ease;
   }
   .card:hover .title { color: var(--orange); }
-  .card .byline { color: var(--text-dim); font-size: 12px; }
+  .card .byline {
+    color: var(--text-dim); font-size: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card .byline .like { margin-left: auto; }
   .load-more {
     display: block; margin: 26px auto 0;
     background: var(--card); color: var(--text); border: none;
@@ -355,6 +371,7 @@
   </div>
 
   <main>
+    <div class="chips sortbar" id="sortbar"></div>
     <div class="chips" id="chips" hidden></div>
     <div class="grid" id="grid"></div>
     <div id="sentinel" aria-hidden="true"></div>
@@ -368,6 +385,7 @@
       <a class="back" id="v-back" href="#" onclick="goHome();return false">← 返回</a>
       <h2 id="v-title"></h2>
       <span class="byline" id="v-byline"></span>
+      <span class="like" id="v-like" role="button" onclick="likeComic(comics[current].id, event)">♥<b></b></span>
     </div>
     <div id="v-pages"></div>
     <div class="viewer-pager">
@@ -425,6 +443,13 @@ const I18N = {
     footer: '非官方粉丝站 · 全年龄向 · 漫画版权归作者 · 鲸鱼娘形象 © DeepSeek · ',
     notice: '本站只收录<b>全年龄向</b>的鲸鱼娘同人漫画,不接受色情、政治及侵权内容',
     searchPh: '搜索漫画',
+    sortNew: '最新',
+    sortTrend: '趋势',
+    sortTop: '最多赞',
+    rangeWeek: '本周',
+    rangeMonth: '本月',
+    rangeAll: '全部时间',
+    likeAria: '点赞',
     langBtn: 'EN'
   },
   en: {
@@ -450,6 +475,13 @@ const I18N = {
     footer: 'Unofficial fan site · All-ages · Comics © their authors · Whale-girl © DeepSeek · ',
     notice: '<b>All-ages</b> whale-girl fan comics only — no adult, political or infringing content',
     searchPh: 'Search comics',
+    sortNew: 'Newest',
+    sortTrend: 'Trending',
+    sortTop: 'Most liked',
+    rangeWeek: 'This week',
+    rangeMonth: 'This month',
+    rangeAll: 'All time',
+    likeAria: 'Like',
     langBtn: '中文'
   }
 }
@@ -478,6 +510,7 @@ function setLang(l) {
   document.getElementById('v-next').setAttribute('aria-label', d.next)
   document.getElementById('notice').innerHTML = d.notice
   document.getElementById('search').setAttribute('placeholder', d.searchPh)
+  renderSortbar()
   document.querySelectorAll('.hint').forEach(el => { el.innerHTML = d.hint })
   document.querySelectorAll('.prompt-text').forEach(el => { el.textContent = d.prompt })
   document.querySelectorAll('.copy-btn').forEach(el => { el.textContent = d.copyBtn })
@@ -514,6 +547,13 @@ async function boot() {
   buildChips()
   applyFilter('__all')
   route()
+  // 异步拉取点赞总数,回填到已渲染的 ♥ 上
+  ensureCounts(['t']).then(() => {
+    document.querySelectorAll('.like[data-id]').forEach(el => {
+      const cnt = likeCounts[el.dataset.id]?.t
+      if (cnt !== undefined) el.querySelector('b').textContent = cnt
+    })
+  })
 }
 
 /* ---------- 分区(标签筛选) ---------- */
@@ -529,6 +569,134 @@ function buildChips() {
     tags.map(t =>
       `<button class="chip" data-tag="${esc(t)}" onclick="applyFilter(this.dataset.tag)">${esc(t)}<small>${counts[t]}</small></button>`
     ).join('')
+}
+
+/* ---------- 点赞(abacus 全局计数,localStorage 防重复) ---------- */
+const LIKE_API = 'https://abacus.jasoncameron.dev'
+const LIKE_NS = 'dsh-nsfw'
+const likeCounts = {}   // id -> { t, w, pw, m } (undefined=未知)
+const likedSet = new Set(JSON.parse(safeGet('liked') || '[]'))
+let sortBy = 'new'      // new | trend | top
+let likeRange = 'all'   // week | month | all(仅 top 用)
+
+function pad2(n) { return String(n).padStart(2, '0') }
+function weekKey(offset = 0) {
+  // ISO 周:YYYY-WW
+  const d = new Date()
+  d.setDate(d.getDate() + offset * 7)
+  const th = new Date(d); th.setDate(th.getDate() + 4 - (th.getDay() || 7))
+  const y = th.getFullYear()
+  const wk = Math.ceil((((th - new Date(y, 0, 1)) / 86400000) + 1) / 7)
+  return `${y}-${pad2(wk)}`
+}
+function monthKey() {
+  const d = new Date()
+  return `${d.getFullYear()}${pad2(d.getMonth() + 1)}`
+}
+const likeKey = {
+  t: id => `t_${id}`,
+  w: id => `w_${id}_${weekKey()}`,
+  pw: id => `w_${id}_${weekKey(-1)}`,
+  m: id => `m_${id}_${monthKey()}`
+}
+
+async function apiGet(key) {
+  const ck = 'lc_' + key
+  try {
+    const hit = JSON.parse(sessionStorage.getItem(ck) || 'null')
+    if (hit && Date.now() - hit.ts < 300000) return hit.v
+  } catch (e) {}
+  try {
+    const r = await fetch(`${LIKE_API}/get/${LIKE_NS}/${key}`)
+    const v = r.ok ? ((await r.json()).value || 0) : (r.status === 404 ? 0 : null)
+    if (v !== null) try { sessionStorage.setItem(ck, JSON.stringify({ v, ts: Date.now() })) } catch (e) {}
+    return v
+  } catch (e) { return null }
+}
+function apiHit(key) {
+  try { sessionStorage.removeItem('lc_' + key) } catch (e) {}
+  fetch(`${LIKE_API}/hit/${LIKE_NS}/${key}`).catch(() => {})
+}
+
+// abacus 限流 30 次/10s:分批取数
+async function fetchCounts(jobs) {  // jobs: [{id, field, key}]
+  for (let i = 0; i < jobs.length; i += 20) {
+    if (i > 0) await new Promise(r => setTimeout(r, 10500))
+    await Promise.all(jobs.slice(i, i + 20).map(async j => {
+      const v = await apiGet(j.key)
+      if (v !== null) (likeCounts[j.id] ??= {})[j.field] = v
+    }))
+  }
+}
+
+async function ensureCounts(need) {  // need: ['t'] / ['w','pw'] / ['m'] ...
+  const jobs = []
+  comics.forEach(c => need.forEach(f => {
+    if (likeCounts[c.id]?.[f] === undefined) jobs.push({ id: c.id, field: f, key: likeKey[f](c.id) })
+  }))
+  if (jobs.length) await fetchCounts(jobs)
+}
+
+function likeComic(id, ev) {
+  ev.stopPropagation()
+  if (likedSet.has(id)) return
+  likedSet.add(id)
+  safeSet('liked', JSON.stringify([...likedSet]))
+  const c = (likeCounts[id] ??= {})
+  c.t = (c.t || 0) + 1; c.w = (c.w || 0) + 1; c.m = (c.m || 0) + 1
+  apiHit(likeKey.t(id)); apiHit(likeKey.w(id)); apiHit(likeKey.m(id))
+  document.querySelectorAll(`.like[data-id="${id}"]`).forEach(el => {
+    el.classList.add('liked')
+    el.querySelector('b').textContent = c.t
+  })
+}
+
+function likeHtml(id) {
+  const cnt = likeCounts[id]?.t
+  return `<span class="like${likedSet.has(id) ? ' liked' : ''}" data-id="${esc(id)}" role="button"
+    aria-label="${t().likeAria}" onclick="likeComic('${esc(id)}', event)">♥<b>${cnt ?? ''}</b></span>`
+}
+
+/* ---------- 排序维度 ---------- */
+function trendScore(c) {
+  const l = likeCounts[c.id] || {}
+  return (l.w || 0) * 2 + (l.pw || 0)
+}
+function rangeCount(c) {
+  const l = likeCounts[c.id] || {}
+  return likeRange === 'week' ? (l.w || 0) : likeRange === 'month' ? (l.m || 0) : (l.t || 0)
+}
+function sortView() {
+  if (sortBy === 'trend') view.sort((a, b) => trendScore(b) - trendScore(a) || (b.date || '').localeCompare(a.date || ''))
+  else if (sortBy === 'top') view.sort((a, b) => rangeCount(b) - rangeCount(a) || (b.date || '').localeCompare(a.date || ''))
+  // 'new':comics 本身按日期倒序,保持原序
+}
+
+function renderSortbar() {
+  const d = t()
+  const sorts = [['new', d.sortNew], ['trend', d.sortTrend], ['top', d.sortTop]]
+  const ranges = [['week', d.rangeWeek], ['month', d.rangeMonth], ['all', d.rangeAll]]
+  let html = sorts.map(([k, label]) =>
+    `<button class="chip${sortBy === k ? ' active' : ''}" onclick="setSort('${k}')">${label}</button>`).join('')
+  if (sortBy === 'top') {
+    html += '<span class="sep"></span>' + ranges.map(([k, label]) =>
+      `<button class="chip${likeRange === k ? ' active' : ''}" onclick="setRange('${k}')">${label}</button>`).join('')
+  }
+  document.getElementById('sortbar').innerHTML = html
+}
+
+async function setSort(s) {
+  sortBy = s
+  renderSortbar()
+  if (s === 'trend') await ensureCounts(['w', 'pw'])
+  if (s === 'top') await ensureCounts(likeRange === 'week' ? ['w'] : likeRange === 'month' ? ['m'] : ['t'])
+  applyFilter(activeTag)
+}
+async function setRange(r) {
+  likeRange = r
+  renderSortbar()
+  await ensureCounts(r === 'week' ? ['w'] : r === 'month' ? ['m'] : ['t'])
+  applyFilter(activeTag)
 }
 
 let searchQ = ''
@@ -548,6 +716,7 @@ function applyFilter(tag) {
     ch.classList.toggle('active', ch.dataset.tag === tag))
   view = (tag === '__all' ? comics : comics.filter(c => (c.tags || []).includes(tag)))
     .filter(matchesSearch)
+  sortView()
   shown = 0
   document.getElementById('grid').innerHTML = ''
   if (!view.length) {
@@ -567,7 +736,7 @@ function renderMore() {
     <div class="card" onclick="openComic(${i})">
       <div class="cover"><img src="${esc(c.cover)}" alt="${esc(c.title)}" loading="lazy"></div>
       <div class="title">${esc(c.title)}</div>
-      <div class="byline">${esc(c.author || t().anon)} · ${t().pages(c.pages.length)}</div>
+      <div class="byline"><span>${esc(c.author || t().anon)} · ${t().pages(c.pages.length)}</span>${likeHtml(c.id)}</div>
     </div>`
   }).join('')
   document.getElementById('grid').insertAdjacentHTML('beforeend', html)
@@ -651,6 +820,11 @@ function openComic(i) {
   document.getElementById('viewer-view').classList.add('active')
   document.getElementById('v-title').textContent = c.title
   document.getElementById('v-byline').textContent = c.author || t().anon
+  const vl = document.getElementById('v-like')
+  vl.dataset.id = c.id
+  vl.classList.toggle('liked', likedSet.has(c.id))
+  vl.setAttribute('aria-label', t().likeAria)
+  vl.querySelector('b').textContent = likeCounts[c.id]?.t ?? ''
   document.getElementById('v-pages').innerHTML =
     c.pages.map((p, n) => `<div class="page-frame"><img src="${esc(p)}" alt="${t().pageAlt(n + 1)}" loading="lazy"></div>`).join('')
   document.getElementById('v-prev').disabled = i <= 0
