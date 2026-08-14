@@ -48,4 +48,5 @@ jobs:
           set -eu
           gh pr comment "${{ github.event.pull_request.number }}" --body \
             "🐋 收到投稿!校验通过,已自动合并,几分钟内上线 [dsh-nsfw.com](https://dsh-nsfw.com)。"
-          gh pr merge "${{ github.event.pull_request.number }}" --merge
+          gh pr merge "${{ github.event.pull_request.number }}" --merge \
+            --repo "${{ github.repository }}" --delete-branch
