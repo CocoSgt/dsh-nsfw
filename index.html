@@ -178,8 +178,25 @@
   .chip:hover { color: var(--text); background: var(--card-hover); }
   .chip.active { color: #000; background: var(--orange); font-weight: 700; }
   .chip small { opacity: .7; margin-left: 4px; }
-  .sortbar { margin-bottom: 10px; }
-  .sortbar .sep { width: 1px; align-self: stretch; background: var(--border); margin: 2px 4px; }
+
+  .toolbar {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px; margin-bottom: 18px; flex-wrap: wrap;
+  }
+  .toolbar .chips { margin-bottom: 0; flex: 1; min-width: 0; }
+  .sort-controls {
+    display: flex; gap: 8px; margin-left: auto;
+    flex-wrap: wrap; justify-content: flex-end;
+  }
+  .seg { display: inline-flex; background: #1f1f1f; border-radius: 6px; padding: 3px; }
+  .seg button {
+    background: none; border: none; color: var(--text-dim);
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    padding: 5px 14px; border-radius: 4px; cursor: pointer;
+    transition: color .15s ease, background .15s ease;
+  }
+  .seg button:hover { color: var(--text); }
+  .seg button.active { background: var(--orange); color: #000; font-weight: 700; }
 
   .like {
     display: inline-flex; align-items: center; gap: 5px;
@@ -217,6 +234,8 @@
     display: flex; align-items: center; gap: 6px;
   }
   .card .byline .like { margin-left: auto; }
+  .author { color: var(--text-dim); }
+  .author:hover { color: var(--orange); text-decoration: underline; }
   .load-more {
     display: block; margin: 26px auto 0;
     background: var(--card); color: var(--text); border: none;
@@ -301,6 +320,9 @@
     .btn-submit { width: 80px; padding: 6px 0; font-size: 14px; }
     .search { order: 9; flex-basis: 100%; max-width: none; padding: 7px 14px; }
     .notice { font-size: 12px; padding: 7px 12px; }
+    .toolbar { flex-direction: column; }
+    .toolbar .chips { width: 100%; }
+    .sort-controls { margin-left: 0; justify-content: flex-start; }
     .hero { padding: 22px 14px 2px; }
     .hero-row { flex-direction: column; gap: 14px; text-align: center; }
     .pixel-whale { width: 110px; }
@@ -387,8 +409,10 @@
   </div>
 
   <main>
-    <div class="chips sortbar" id="sortbar"></div>
-    <div class="chips" id="chips" hidden></div>
+    <div class="toolbar">
+      <div class="chips" id="chips" hidden></div>
+      <div class="sort-controls" id="sortbar"></div>
+    </div>
     <div class="grid" id="grid"></div>
     <div id="sentinel" aria-hidden="true"></div>
     <button class="load-more" id="load-more" onclick="renderMore()" hidden>加载更多</button>
@@ -668,6 +692,12 @@ function likeComic(id, ev) {
   })
 }
 
+function authorHtml(c) {
+  if (!c.author) return esc(t().anon)
+  return `<a class="author" href="https://github.com/${encodeURIComponent(c.author)}"
+    target="_blank" rel="noopener" onclick="event.stopPropagation()">${esc(c.author)}</a>`
+}
+
 function likeHtml(id) {
   const cnt = likeCounts[id]?.t
   return `<span class="like${likedSet.has(id) ? ' liked' : ''}" data-id="${esc(id)}" role="button"
@@ -693,11 +723,13 @@ function renderSortbar() {
   const d = t()
   const sorts = [['new', d.sortNew], ['trend', d.sortTrend], ['top', d.sortTop]]
   const ranges = [['week', d.rangeWeek], ['month', d.rangeMonth], ['all', d.rangeAll]]
-  let html = sorts.map(([k, label]) =>
-    `<button class="chip${sortBy === k ? ' active' : ''}" onclick="setSort('${k}')">${label}</button>`).join('')
+  let html = '<div class="seg" role="radiogroup">' + sorts.map(([k, label]) =>
+    `<button class="${sortBy === k ? 'active' : ''}" role="radio" aria-checked="${sortBy === k}"
+      onclick="setSort('${k}')">${label}</button>`).join('') + '</div>'
   if (sortBy === 'top') {
-    html += '<span class="sep"></span>' + ranges.map(([k, label]) =>
-      `<button class="chip${likeRange === k ? ' active' : ''}" onclick="setRange('${k}')">${label}</button>`).join('')
+    html += '<div class="seg" role="radiogroup">' + ranges.map(([k, label]) =>
+      `<button class="${likeRange === k ? 'active' : ''}" role="radio" aria-checked="${likeRange === k}"
+        onclick="setRange('${k}')">${label}</button>`).join('') + '</div>'
   }
   document.getElementById('sortbar').innerHTML = html
 }
@@ -729,7 +761,7 @@ function matchesSearch(c) {
 
 function applyFilter(tag) {
   activeTag = tag
-  document.querySelectorAll('.chip').forEach(ch =>
+  document.querySelectorAll('#chips .chip').forEach(ch =>
     ch.classList.toggle('active', ch.dataset.tag === tag))
   view = (tag === '__all' ? comics : comics.filter(c => (c.tags || []).includes(tag)))
     .filter(matchesSearch)
@@ -753,7 +785,7 @@ function renderMore() {
     <div class="card" onclick="openComic(${i})">
       <div class="cover"><img src="${esc(c.cover)}" alt="${esc(c.title)}" loading="lazy"></div>
       <div class="title">${esc(c.title)}</div>
-      <div class="byline"><span>${esc(c.author || t().anon)} · ${t().pages(c.pages.length)}</span>${likeHtml(c.id)}</div>
+      <div class="byline"><span>${authorHtml(c)} · ${t().pages(c.pages.length)}</span>${likeHtml(c.id)}</div>
     </div>`
   }).join('')
   document.getElementById('grid').insertAdjacentHTML('beforeend', html)
@@ -836,7 +868,7 @@ function openComic(i) {
   document.getElementById('gallery-view').style.display = 'none'
   document.getElementById('viewer-view').classList.add('active')
   document.getElementById('v-title').textContent = c.title
-  document.getElementById('v-byline').textContent = c.author || t().anon
+  document.getElementById('v-byline').innerHTML = authorHtml(c)
   ;['v-like', 'v-like-btn'].forEach(elId => {
     const vl = document.getElementById(elId)
     vl.dataset.id = c.id
