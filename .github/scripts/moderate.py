@@ -14,6 +14,8 @@
 import base64
 import json
 import os
+import sys
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -121,8 +123,15 @@ def main() -> None:
         },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=180) as resp:
-        data = json.load(resp)
+    try:
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            data = json.load(resp)
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode(errors="replace")[:2000]
+        print(f"OpenAI API HTTP {e.code}: {detail}", file=sys.stderr)
+        if e.code == 401:
+            print("提示: OPENAI_API_KEY 无效或已作废,请重设仓库 secret", file=sys.stderr)
+        raise
 
     choice = data["choices"][0]
     if choice.get("finish_reason") == "content_filter":
