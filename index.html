@@ -413,13 +413,17 @@ const I18N = {
     langBtn: '中文'
   }
 }
-let LANG = localStorage.getItem('lang') ||
-  ((navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en')
+const urlLang = new URLSearchParams(location.search).get('lang')
+let LANG = (urlLang === 'en' || urlLang === 'zh') ? urlLang :
+  (safeGet('lang') || ((navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en'))
 const t = () => I18N[LANG]
+
+function safeGet(k) { try { return localStorage.getItem(k) } catch (e) { return null } }
+function safeSet(k, v) { try { localStorage.setItem(k, v) } catch (e) {} }
 
 function setLang(l) {
   LANG = l
-  localStorage.setItem('lang', l)
+  safeSet('lang', l)
   const d = t()
   document.documentElement.lang = d.htmlLang
   document.title = d.title
