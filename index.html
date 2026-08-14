@@ -240,9 +240,15 @@
   }
   .page-frame img { width: 100%; display: block; }
   .viewer-pager {
-    display: flex; align-items: center; justify-content: center; gap: 14px;
-    margin: 18px 0 40px;
+    position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+    z-index: 20;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    background: rgba(0,0,0,.78); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.55);
   }
+  .viewer main { padding-bottom: 120px; }
   .pager-btn {
     background: var(--card); color: var(--text); border: none;
     padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px;
