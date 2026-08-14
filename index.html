@@ -262,6 +262,16 @@
     width: 64px; padding: 8px 0; text-align: center;
     font-size: 17px; font-weight: 700;
   }
+  .pager-btn.pager-like {
+    min-width: 96px; font-size: 17px; gap: 7px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #000; cursor: pointer;
+  }
+  .pager-btn.pager-like b { font-size: 14px; font-weight: 700; }
+  .pager-btn.pager-like:hover { color: #000; }
+  .pager-btn.pager-like.liked {
+    background: var(--card); color: var(--orange); cursor: default;
+  }
 
   /* ---------- footer / toast ---------- */
   footer {
@@ -396,7 +406,8 @@
     <div id="v-pages"></div>
     <div class="viewer-pager">
       <button class="pager-btn arrow" id="v-prev" aria-label="上一话">←</button>
-      <button class="pager-btn primary" id="v-home" onclick="goHome()">返回</button>
+      <button class="pager-btn primary pager-like like" id="v-like-btn" data-id=""
+        onclick="likeComic(this.dataset.id, event)">♥<b></b></button>
       <button class="pager-btn arrow" id="v-next" aria-label="下一话">→</button>
     </div>
   </main>
@@ -511,7 +522,7 @@ function setLang(l) {
   document.getElementById('footer-text').textContent = d.footer
   document.getElementById('load-more').textContent = d.loadMore
   document.getElementById('v-back').textContent = d.back
-  document.getElementById('v-home').textContent = d.home
+  document.getElementById('v-like-btn').setAttribute('aria-label', d.likeAria)
   document.getElementById('v-prev').setAttribute('aria-label', d.prev)
   document.getElementById('v-next').setAttribute('aria-label', d.next)
   document.getElementById('notice').innerHTML = d.notice
@@ -645,7 +656,7 @@ async function ensureCounts(need) {  // need: ['t'] / ['w','pw'] / ['m'] ...
 
 function likeComic(id, ev) {
   ev.stopPropagation()
-  if (likedSet.has(id)) return
+  if (!id || likedSet.has(id)) return
   likedSet.add(id)
   safeSet('liked', JSON.stringify([...likedSet]))
   const c = (likeCounts[id] ??= {})
@@ -826,11 +837,13 @@ function openComic(i) {
   document.getElementById('viewer-view').classList.add('active')
   document.getElementById('v-title').textContent = c.title
   document.getElementById('v-byline').textContent = c.author || t().anon
-  const vl = document.getElementById('v-like')
-  vl.dataset.id = c.id
-  vl.classList.toggle('liked', likedSet.has(c.id))
-  vl.setAttribute('aria-label', t().likeAria)
-  vl.querySelector('b').textContent = likeCounts[c.id]?.t ?? ''
+  ;['v-like', 'v-like-btn'].forEach(elId => {
+    const vl = document.getElementById(elId)
+    vl.dataset.id = c.id
+    vl.classList.toggle('liked', likedSet.has(c.id))
+    vl.setAttribute('aria-label', t().likeAria)
+    vl.querySelector('b').textContent = likeCounts[c.id]?.t ?? ''
+  })
   document.getElementById('v-pages').innerHTML =
     c.pages.map((p, n) => `<div class="page-frame"><img src="${esc(p)}" alt="${t().pageAlt(n + 1)}" loading="lazy"></div>`).join('')
   document.getElementById('v-prev').disabled = i <= 0
