@@ -1,11 +1,27 @@
 {
   "comics": [
     {
+      "id": "test-flow",
+      "title": "自动合并测试",
+      "author": "whale-bot",
+      "date": "2026-08-14",
+      "tags": [
+        "测试"
+      ],
+      "cover": "comics/test-flow/p1.svg",
+      "pages": [
+        "comics/test-flow/p1.svg"
+      ]
+    },
+    {
       "id": "hello-whale",
       "title": "你好,鲸",
       "author": "cocosgt",
       "date": "2026-08-14",
-      "tags": ["相遇", "治愈"],
+      "tags": [
+        "相遇",
+        "治愈"
+      ],
       "cover": "comics/hello-whale/p1.svg",
       "pages": [
         "comics/hello-whale/p1.svg",
@@ -18,7 +34,10 @@
       "title": "鲸天加班",
       "author": "cocosgt",
       "date": "2026-08-14",
-      "tags": ["日常", "程序员"],
+      "tags": [
+        "日常",
+        "程序员"
+      ],
       "cover": "comics/whale-overtime/p1.svg",
       "pages": [
         "comics/whale-overtime/p1.svg",
