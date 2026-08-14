@@ -5,7 +5,7 @@
 **鲸漫天堂** —— DeepSeek 鲸鱼娘小漫画收藏与分享站。
 
 - 网址:<https://dsh-nsfw.com>
-- 本仓库即网站本体(Vercel 静态站,无后端,GitHub Pages 备用),所有漫画就是仓库里的文件。
+- 本仓库即网站本体(GitHub Pages 静态站,无后端)——**仓库就是数据库**:所有漫画就是仓库里的文件,合并进 main 即上线。
 
 ## 投稿漫画(两种方式,任选)
 
@@ -48,13 +48,13 @@
 index.html      站点(画廊 + 阅读器,纯前端)
 comics.json     漫画登记表(投稿时在此登记)
 comics/<id>/    每部漫画一个目录,页面图片按序命名
-CNAME          GitHub Pages 备用域名(主站走 Vercel)
+CNAME          自定义域名 dsh-nsfw.com
 ```
 
 ## 开发
 
-纯静态站,改完 `index.html` 或 `comics.json` 提交即可:仓库已连接 Vercel,
-合并到 main 自动部署到 dsh-nsfw.com(GitHub Pages 同步更新作备用)。
+纯静态站,改完 `index.html` 或 `comics.json` 提交并合并到 main 即可,
+GitHub Pages 自动构建部署到 dsh-nsfw.com。
 本地预览:在仓库目录跑 `python3 -m http.server` 然后打开 <http://localhost:8000>。
 
 ## English
