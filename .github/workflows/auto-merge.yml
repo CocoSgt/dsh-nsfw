@@ -48,5 +48,9 @@ jobs:
           set -eu
           gh pr comment "${{ github.event.pull_request.number }}" --body \
             "🐋 收到投稿!校验通过,已自动合并,几分钟内上线 [dsh-nsfw.com](https://dsh-nsfw.com)。"
-          gh pr merge "${{ github.event.pull_request.number }}" --merge \
-            --repo "${{ github.repository }}" --delete-branch
+          # 直接走 REST API 合并,gh pr merge 会调用本地 git,runner 上没有仓库
+          gh api -X PUT "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge" \
+            -f merge_method=merge \
+            -f head_sha="${{ github.event.pull_request.head.sha }}" \
+            || { echo "合并失败(可能刚被别人合并或分支已更新)"; exit 1; }
+          gh api -X DELETE "repos/${{ github.repository }}/git/refs/heads/${{ github.event.pull_request.head.ref }}" || true
