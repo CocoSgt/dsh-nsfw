@@ -44,13 +44,66 @@ jobs:
             -q .content | base64 -d | jq empty \
             || { echo "comics.json 不是合法 JSON"; exit 1; }
 
+      # pull_request_target 默认 checkout base 分支代码,不会执行 PR 里的代码,安全
+      - name: Checkout(取审核脚本)
+        uses: actions/checkout@v4
+
+      - name: AI 内容审核(色情/政治/暴力等,视觉识别)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -eu
+          if [ -z "${OPENAI_API_KEY:-}" ]; then
+            gh pr comment "$PR" --body \
+              "⚠️ 仓库未配置 \`OPENAI_API_KEY\`,AI 内容审核无法运行;为安全起见暂停自动合并,请维护者人工审核。"
+            exit 1
+          fi
+          sudo apt-get -qq update >/dev/null && sudo apt-get -qq install -y librsvg2-bin >/dev/null
+
+          # 只下载数据文件(图片/JSON),绝不执行 PR 中的任何代码
+          mkdir -p /tmp/review
+          gh api "repos/${{ github.repository }}/pulls/$PR/files?per_page=100" --paginate \
+            -q '.[] | select(.status != "removed") | .filename' | grep '^comics/' > /tmp/imgfiles || true
+          while IFS= read -r f; do
+            mkdir -p "/tmp/review/$(dirname "$f")"
+            curl -fsSL "https://raw.githubusercontent.com/$HEAD_REPO/$HEAD_SHA/$f" -o "/tmp/review/$f"
+          done < /tmp/imgfiles
+          # SVG 转 PNG 供视觉模型审核
+          find /tmp/review -name '*.svg' | while IFS= read -r s; do
+            rsvg-convert -w 1024 "$s" -o "$s.png" && rm "$s"
+          done
+          curl -fsSL "https://raw.githubusercontent.com/$HEAD_REPO/$HEAD_SHA/comics.json" -o /tmp/head-comics.json || true
+
+          if ! REVIEW_DIR=/tmp/review COMICS_JSON=/tmp/head-comics.json python3 .github/scripts/moderate.py; then
+            gh pr comment "$PR" --body \
+              "⚠️ AI 内容审核服务暂时不可用,自动合并已暂停;稍后重新推送以重试,或等待人工审核。"
+            exit 1
+          fi
+
+          if [ "$(jq -r .allowed /tmp/verdict.json)" != "true" ]; then
+            reasons=$(jq -r '.reasons[] | "- " + .' /tmp/verdict.json)
+            gh label create "needs-human-review" -c FF9000 -d "AI 审核未通过,待人工复核" 2>/dev/null || true
+            gh pr edit "$PR" --add-label "needs-human-review" || true
+            gh pr comment "$PR" --body "🚫 AI 内容审核未通过,已暂停自动合并,等待人工复核:
+
+          $reasons
+
+          本站只收录全年龄向的鲸鱼娘同人漫画,不接受色情、政治、暴力及侵权内容。如有异议请在此回复说明。"
+            exit 1
+          fi
+          echo "✅ 内容审核通过"
+
       - name: 合并
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -eu
           gh pr comment "${{ github.event.pull_request.number }}" --body \
-            "🐋 收到投稿!校验通过,已自动合并,几分钟内上线 [dsh-nsfw.com](https://dsh-nsfw.com)。"
+            "🐋 收到投稿!校验与 AI 内容审核通过,已自动合并,几分钟内上线 [dsh-nsfw.com](https://dsh-nsfw.com)。"
           # 直接走 REST API 合并,gh pr merge 会调用本地 git,runner 上没有仓库
           gh api -X PUT "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge" \
             -f merge_method=merge \
