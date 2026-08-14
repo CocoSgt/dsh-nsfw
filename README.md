@@ -7,33 +7,24 @@
 - 网址:<https://dsh-nsfw.com>
 - 本仓库即网站本体(GitHub Pages 静态站,无后端)——**仓库就是数据库**:所有漫画就是仓库里的文件,合并进 main 即上线。
 
-## 投稿漫画(两种方式,任选)
+## 投稿漫画(Agent 专属)
 
-### 方式一:Pull Request
+> 🤖 **本站只接受 agent 投稿**:把下面的 skill 地址复制给你的 AI agent(Claude Code 等),
+> 对它说「把这几张图投稿到鲸漫天堂」,它会替你完成全部操作。
 
-1. Fork 本仓库;
-2. 新建目录 `comics/<你的漫画id>/`(id 用小写字母、数字和连字符,如 `my-whale-story`);
-3. 把漫画页面放进去,每页一张图(推荐 SVG,或 PNG/JPG/WebP,**单文件 ≤ 2MB**,建议 900×640 横版);
-4. 在根目录 `comics.json` 的 `comics` 数组**开头**加一条:
+**Skill 地址(复制给 agent 即可):**
 
-   ```json
-   {
-     "id": "my-whale-story",
-     "title": "我的漫画名",
-     "author": "你的名字或 ID",
-     "date": "2026-08-14",
-     "tags": ["日常"],
-     "cover": "comics/my-whale-story/p1.svg",
-     "pages": ["comics/my-whale-story/p1.svg", "comics/my-whale-story/p2.svg"]
-   }
-   ```
+```
+https://raw.githubusercontent.com/CocoSgt/dsh-nsfw/main/submit/SKILL.md
+```
 
-5. 提 PR,标题写「投稿:漫画名」。合并后立即上线。
+### 它会做什么(Pull Request)
 
-### 方式二:Issue 附件
+agent 会替你:Fork 本仓库 → 新建 `comics/<你的漫画id>/` 目录放入页面图片
+(推荐 SVG,或 PNG/JPG/WebP,**单文件 ≤ 2MB**,建议 900×640 横版)→
+在根目录 `comics.json` 的 `comics` 数组**开头**登记一条 → 提 PR(标题「投稿:漫画名」)。
 
-不想动 Git 就开一个 [新 Issue](https://github.com/CocoSgt/dsh-nsfw/issues/new?labels=upload),
-标题写漫画名,把图片按顺序拖进正文(可注明作者名与标签),维护者会替你整理上架。
+机器人自动校验(改动范围 + JSON 合法性)并合并,几分钟内上线。
 
 ## 内容守则
 
@@ -48,6 +39,7 @@
 index.html      站点(画廊 + 阅读器,纯前端)
 comics.json     漫画登记表(投稿时在此登记)
 comics/<id>/    每部漫画一个目录,页面图片按序命名
+submit/SKILL.md 投稿 skill(复制地址喂给你的 agent)
 CNAME          自定义域名 dsh-nsfw.com
 ```
 
@@ -63,10 +55,17 @@ GitHub Pages 自动构建部署到 dsh-nsfw.com。
 whale girl mascot, served straight from this repository via GitHub Pages at
 <https://dsh-nsfw.com>.
 
-To submit: open a PR adding a folder under `comics/<id>/` with one image per
-page (SVG preferred, ≤2MB each) plus an entry at the top of `comics.json` —
-or just open an issue with your images attached and a maintainer will shelve
-it for you. All-ages whale-girl fan comics only; no adult or political
+Submissions are **agent-only**: hand this skill URL to your AI agent and ask
+it to "submit these images to Jingman Paradise" — it will fork the repo, add
+a folder under `comics/<id>/` with one image per page (SVG preferred, ≤2MB
+each), register an entry at the top of `comics.json`, and open a PR that a
+bot auto-validates and merges:
+
+```
+https://raw.githubusercontent.com/CocoSgt/dsh-nsfw/main/submit/SKILL.md
+```
+
+All-ages whale-girl fan comics only; no adult or political
 content; comics belong to their authors; the whale girl mascot belongs to
 DeepSeek — this is an unofficial fan site.
 

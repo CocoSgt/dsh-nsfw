@@ -125,6 +125,13 @@
   }
   footer p { max-width: 760px; margin: 0 auto 8px; }
   .empty { color: var(--text-dim); text-align: center; padding: 60px 0; }
+  .copy-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: var(--bg-deep); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 14px;
+  }
+  .copy-row code { flex: 1; min-width: 200px; font-size: 13px; color: var(--orange-soft); }
+  .copy-row .pager-btn { white-space: nowrap; }
 
   @media (max-width: 640px) {
     .nav { gap: 12px; padding: 10px 14px; }
@@ -169,23 +176,26 @@
 <section id="gallery-view">
   <div class="hero">
     <h1>深海里的<em>小鲸</em>,人间的小漫画</h1>
-    <p>鲸漫天堂收录 DeepSeek 鲸鱼娘同人小漫画。全部漫画由社区通过 GitHub 投稿,
-    点「上传漫画」看看怎么把你的鲸放进来。</p>
+    <p>鲸漫天堂收录 DeepSeek 鲸鱼娘同人小漫画。全部漫画由社区的 AI agent 通过 GitHub 投稿,
+    点「上传漫画」复制 skill,让你的 agent 把你的鲸放进来。</p>
   </div>
   <main>
     <div class="section-title">最新收录 <span id="comic-count"></span></div>
     <div class="grid" id="grid"></div>
 
-    <div class="section-title" id="upload">投稿方式 <span>两种,任选</span></div>
+    <div class="section-title" id="upload">投稿方式 <span>只接受 Agent 投稿</span></div>
     <div class="card" style="cursor:default; max-width:720px">
       <div class="meta" style="font-size:15px">
-        <p style="margin-bottom:10px"><b style="color:var(--orange)">① Pull Request</b> —— Fork 本仓库,在
-        <code>comics/&lt;你的漫画id&gt;/</code> 里放进页面图片,并在根目录
-        <code>comics.json</code> 登记一条,提 PR 即可。格式与限制见
+        <p style="margin-bottom:10px"><b style="color:var(--orange)">🤖 把 skill 地址喂给你的 Agent</b>
+        —— 复制下面的地址,发给你的 AI agent(Claude Code 等),再说一句
+        「把这几张图投稿到鲸漫天堂」,它会替你完成 Fork、登记、提 PR 的全部操作,机器人自动校验合并,几分钟内上线。</p>
+        <div class="copy-row">
+          <code id="skill-url">https://raw.githubusercontent.com/CocoSgt/dsh-nsfw/main/submit/SKILL.md</code>
+          <button class="pager-btn primary" onclick="copySkill(this)">一键复制</button>
+        </div>
+        <p style="margin-top:12px;color:var(--text-dim);font-size:13px">本站只接受 agent 提交的投稿 PR;
+        格式与限制(全年龄向、单图 ≤ 2MB、只能改动 <code>comics/</code> 与 <code>comics.json</code>)详见
         <a href="https://github.com/CocoSgt/dsh-nsfw" target="_blank" rel="noopener">仓库 README</a>。</p>
-        <p><b style="color:var(--orange)">② Issue 附件</b> —— 不想动 Git?打开仓库的
-        <a href="https://github.com/CocoSgt/dsh-nsfw/issues/new?labels=upload" target="_blank" rel="noopener">新 Issue</a>,
-        标题写漫画名,图片拖进正文,维护者会替你上架。</p>
       </div>
     </div>
   </main>
@@ -282,6 +292,26 @@ function goHome() {
 
 document.getElementById('v-prev').onclick = () => current > 0 && openComic(current - 1)
 document.getElementById('v-next').onclick = () => current < comics.length - 1 && openComic(current + 1)
+
+function copySkill(btn) {
+  const url = document.getElementById('skill-url').textContent
+  const done = () => { btn.textContent = '已复制 ✓'; setTimeout(() => { btn.textContent = '一键复制' }, 2000) }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done))
+  } else {
+    fallbackCopy(url, done)
+  }
+}
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea')
+  ta.value = text
+  ta.style.position = 'fixed'; ta.style.opacity = '0'
+  document.body.appendChild(ta)
+  ta.select()
+  try { document.execCommand('copy'); done() } catch (e) {}
+  document.body.removeChild(ta)
+}
+
 window.addEventListener('hashchange', route)
 boot()
 </script>
