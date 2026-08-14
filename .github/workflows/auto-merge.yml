@@ -1,0 +1,51 @@
+name: 投稿 PR 自动合并
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    # 只自动合并「投稿」:改动必须全部落在 comics/ 与 comics.json 里
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 校验改动范围
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          files=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files?per_page=100" --paginate -q '.[].filename')
+          echo "$files"
+          bad=$(echo "$files" | grep -v -E '^comics/|^comics\.json$' || true)
+          if [ -n "$bad" ]; then
+            echo "超出投稿范围的文件:"; echo "$bad"
+            gh pr comment "${{ github.event.pull_request.number }}" --body \
+              "🤖 自动合并只接受 \`comics/\` 与 \`comics.json\` 的改动,以下文件超出范围,请调整后重新提交:
+              \`\`\`
+              $(echo "$bad")
+              \`\`\`"
+            exit 1
+          fi
+
+      - name: 校验 comics.json 是合法 JSON
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          gh api "repos/${{ github.repository }}/contents/comics.json?ref=${{ github.event.pull_request.head.sha }}" \
+            -q .content | base64 -d | jq empty \
+            || { echo "comics.json 不是合法 JSON"; exit 1; }
+
+      - name: 合并
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          gh pr comment "${{ github.event.pull_request.number }}" --body \
+            "🐋 收到投稿!校验通过,已自动合并,几分钟内上线 [dsh-nsfw.com](https://dsh-nsfw.com)。"
+          gh pr merge "${{ github.event.pull_request.number }}" --merge

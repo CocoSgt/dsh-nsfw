@@ -1,0 +1,82 @@
+name: Issue 投稿自动上架
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  shelve:
+    if: github.event.label.name == 'upload'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 下载附件并登记上架
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          set -eu
+          cd "$GITHUB_WORKSPACE"
+
+          # 抓取正文里的图片资源链接(user-attachments 与 private-user-images 两种形态)
+          urls=$(printf '%s' "$ISSUE_BODY" | grep -o -E 'https://(github\.com/user-attachments/assets/[A-Za-z0-9._-]+|private-user-images\.githubusercontent\.com/net/[A-Za-z0-9/._-]+)' | awk '!seen[$0]++' || true)
+          if [ -z "$urls" ]; then
+            gh issue comment "$ISSUE_NUMBER" --body \
+              "🤖 没有在 Issue 正文里找到图片附件。请把漫画页面图片直接拖进 Issue 正文(不是评论区),拖完重新打上 \`upload\` 标签。"
+            exit 0
+          fi
+
+          id="issue-$ISSUE_NUMBER"
+          title=$(printf '%s' "$ISSUE_TITLE" | sed -E 's/^(投稿[:：]?)\s*//' | cut -c1-40)
+          dir="comics/$id"
+          mkdir -p "$dir"
+
+          n=0
+          pages=""
+          for url in $urls; do
+            n=$((n+1))
+            case "$url" in
+              *.png) ext=png ;; *.jpg|*.jpeg) ext=jpg ;;
+              *.webp) ext=webp ;; *.gif) ext=gif ;; *.svg) ext=svg ;;
+              *) ext=png ;;
+            esac
+            page="$dir/p$n.$ext"
+            curl -fsSL -o "$page" "$url"
+            # 单文件 2MB 上限,超限的页面拒绝整单
+            if [ "$(stat -c%s "$page")" -gt 2097152 ]; then
+              gh issue comment "$ISSUE_NUMBER" --body \
+                "🤖 第 $n 页超过 2MB 上限,请压缩后重新投稿。"
+              exit 0
+            fi
+            pages="$pages\"$page\","
+          done
+          pages="${pages%,}"
+
+          # 登记进 comics.json(插到最前,最新投稿排最前)
+          today=$(date +%F)
+          jq --arg id "$id" --arg title "$title" --arg author "$ISSUE_AUTHOR" \
+             --arg date "$today" \
+             --argjson pages "[$pages]" \
+            '.comics |= ([{
+              id: $id, title: $title, author: $author, date: $date,
+              tags: ["投稿"], cover: ("comics/" + $id + "/" + ($pages[0] | split("/")[-1])),
+              pages: $pages
+            }] + .)' comics.json > comics.json.tmp && mv comics.json.tmp comics.json
+
+          git config user.name "whale-bot"
+          git config user.email "actions@github.com"
+          git add "comics/$id" comics.json
+          git commit -m "投稿( #$ISSUE_NUMBER ):$title"
+          git push
+
+          gh issue comment "$ISSUE_NUMBER" --body \
+            "🐋 收到《$title》共 $n 页,已自动上架 [dsh-nsfw.com](https://dsh-nsfw.com),几分钟内生效。谢谢投稿!"
+          gh issue close "$ISSUE_NUMBER"
