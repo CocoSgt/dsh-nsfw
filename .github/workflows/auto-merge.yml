@@ -13,6 +13,9 @@ jobs:
     # 只自动合并「投稿」:改动必须全部落在 comics/ 与 comics.json 里
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
+    env:
+      # runner 上没有本地仓库,显式指定,避免 gh 去调 git
+      GH_REPO: ${{ github.repository }}
     steps:
       - name: 校验改动范围
         env:
