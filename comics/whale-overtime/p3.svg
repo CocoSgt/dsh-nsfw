@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="dawn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a3a55"/>
+      <stop offset="1" stop-color="#0a2033"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="640" fill="url(#dawn)"/>
+  <path d="M0,520 C150,490 300,530 450,510 C600,492 760,528 900,500 L900,640 L0,640 Z" fill="#12314c"/>
+  <!-- soft morning rays -->
+  <g stroke="#ffcf7a" stroke-width="2" opacity=".25">
+    <path d="M640,0 L520,420"/><path d="M760,0 L600,420"/><path d="M880,0 L680,420"/>
+  </g>
+  <!-- whale asleep on keyboard -->
+  <g transform="translate(430,380) rotate(-4)">
+    <path d="M150,-10 C195,-8 225,18 228,45 C231,72 205,95 165,92 C150,91 138,84 132,74 L118,88 L112,60 L84,72 L92,48 C70,38 62,18 70,0 C80,-24 115,-13 150,-10 Z" fill="#3f6ea8"/>
+    <ellipse cx="30" cy="20" rx="135" ry="80" fill="#4a7dbb"/>
+    <path d="M-95,40 C-60,78 40,82 100,55 C60,95 -40,95 -95,40 Z" fill="#bcd9f2" opacity=".85"/>
+    <!-- closed sleepy eyes -->
+    <path d="M20,10 C28,16 40,16 46,10" stroke="#0d0d0d" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M62,10 C68,16 78,16 84,10" stroke="#0d0d0d" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M46,30 C56,40 68,40 76,32" stroke="#0d0d0d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <g transform="translate(8,-70) rotate(-14)">
+      <path d="M0,0 L-30,-16 L-28,12 Z" fill="#ff9000"/>
+      <path d="M0,0 L30,-16 L28,12 Z" fill="#ff9000"/>
+      <circle r="8" fill="#e07800"/>
+    </g>
+    <!-- zzz -->
+    <g fill="#9fd4ff" font-weight="700">
+      <text x="150" y="-96" font-size="30">z</text>
+      <text x="180" y="-130" font-size="38">Z</text>
+      <text x="216" y="-168" font-size="46">Z</text>
+    </g>
+  </g>
+  <!-- keyboard under her -->
+  <g transform="translate(430,470)">
+    <rect x="-180" y="0" width="360" height="40" rx="8" fill="#2a3644"/>
+    <g fill="#46586b">
+      <rect x="-164" y="10" width="34" height="9" rx="3"/><rect x="-124" y="10" width="34" height="9" rx="3"/>
+      <rect x="-84" y="10" width="34" height="9" rx="3"/><rect x="-44" y="10" width="34" height="9" rx="3"/>
+      <rect x="-4" y="10" width="34" height="9" rx="3"/><rect x="36" y="10" width="34" height="9" rx="3"/>
+      <rect x="76" y="10" width="34" height="9" rx="3"/><rect x="116" y="10" width="34" height="9" rx="3"/>
+    </g>
+  </g>
+  <text x="450" y="80" text-anchor="middle" fill="#9fd4ff" font-size="24" opacity=".9">天亮了。屏幕上写着:</text>
+  <g>
+    <rect x="270" y="120" width="360" height="70" rx="14" fill="#101820" stroke="#ff9000" stroke-width="2"/>
+    <text x="450" y="165" text-anchor="middle" fill="#8ce99a" font-size="24" font-family="Menlo,Consolas,monospace">✓ all tests passed</text>
+  </g>
+  <text x="450" y="600" text-anchor="middle" fill="#ff9000" font-size="24" font-weight="700">—— 完 ——</text>
+</svg>

@@ -1,0 +1,30 @@
+{
+  "comics": [
+    {
+      "id": "hello-whale",
+      "title": "你好,鲸",
+      "author": "cocosgt",
+      "date": "2026-08-14",
+      "tags": ["相遇", "治愈"],
+      "cover": "comics/hello-whale/p1.svg",
+      "pages": [
+        "comics/hello-whale/p1.svg",
+        "comics/hello-whale/p2.svg",
+        "comics/hello-whale/p3.svg"
+      ]
+    },
+    {
+      "id": "whale-overtime",
+      "title": "鲸天加班",
+      "author": "cocosgt",
+      "date": "2026-08-14",
+      "tags": ["日常", "程序员"],
+      "cover": "comics/whale-overtime/p1.svg",
+      "pages": [
+        "comics/whale-overtime/p1.svg",
+        "comics/whale-overtime/p2.svg",
+        "comics/whale-overtime/p3.svg"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0e3556"/>
+      <stop offset="1" stop-color="#061d33"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="640" fill="url(#sea)"/>
+  <g opacity=".5" fill="#9fd4ff">
+    <circle cx="150" cy="500" r="5"/><circle cx="210" cy="560" r="3"/><circle cx="740" cy="540" r="4"/>
+    <circle cx="680" cy="80" r="4"/><circle cx="130" cy="70" r="3"/>
+  </g>
+  <!-- whale right, looking left -->
+  <g transform="translate(600,330) scale(1.15)">
+    <path d="M-150,-10 C-195,-8 -225,18 -228,45 C-231,72 -205,95 -165,92 C-150,91 -138,84 -132,74 L-118,88 L-112,60 L-84,72 L-92,48 C-70,38 -62,18 -70,0 C-80,-24 -115,-13 -150,-10 Z" fill="#3f6ea8"/>
+    <ellipse cx="-30" cy="20" rx="135" ry="80" fill="#4a7dbb"/>
+    <path d="M95,40 C60,78 -40,82 -100,55 C-60,95 40,95 95,40 Z" fill="#bcd9f2" opacity=".85"/>
+    <ellipse cx="-45" cy="8" rx="14" ry="10" fill="#0d0d0d"/>
+    <circle cx="-49" cy="4" r="4" fill="#fff"/>
+    <circle cx="-18" cy="30" r="9" fill="#ff9db0" opacity=".7"/>
+    <path d="M-60,32 C-72,42 -88,42 -98,34" stroke="#0d0d0d" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <g transform="translate(-8,-70) rotate(12)">
+      <path d="M0,0 L-30,-16 L-28,12 Z" fill="#ff9000"/>
+      <path d="M0,0 L30,-16 L28,12 Z" fill="#ff9000"/>
+      <circle r="8" fill="#e07800"/>
+    </g>
+  </g>
+  <g>
+    <rect x="70" y="120" width="380" height="96" rx="22" fill="#f2f2f2"/>
+    <path d="M300,216 L282,248 L340,216 Z" fill="#f2f2f2"/>
+    <text x="260" y="162" text-anchor="middle" fill="#1b1b1b" font-size="25" font-weight="600">「听说……你在用 DeepSeek 写代码?」</text>
+    <text x="260" y="198" text-anchor="middle" fill="#666" font-size="18">小鲸的眼睛亮了一下。</text>
+  </g>
+</svg>
