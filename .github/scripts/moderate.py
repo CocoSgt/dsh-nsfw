@@ -18,7 +18,7 @@ import urllib.request
 from pathlib import Path
 
 API_URL = "https://api.openai.com/v1/chat/completions"
-MODEL = os.environ.get("OPENAI_MODEL", "gpt-4.1-mini")  # 便宜且支持视觉
+MODEL = os.environ.get("OPENAI_MODEL", "gpt-5.6-luna")
 
 POLICY = """你是「鲸漫天堂」(dsh-nsfw.com)的内容审核员。这是一个全年龄向的 \
 DeepSeek 鲸鱼娘同人漫画站,所有投稿经你审核后自动上线,请严格把关。
@@ -106,7 +106,7 @@ def main() -> None:
     body = {
         "model": MODEL,
         "messages": [{"role": "user", "content": content}],
-        "max_tokens": 1000,
+        "max_completion_tokens": 8000,  # GPT-5 系列的推理 token 也计入此额度
         "response_format": {
             "type": "json_schema",
             "json_schema": {"name": "verdict", "schema": SCHEMA, "strict": True},
