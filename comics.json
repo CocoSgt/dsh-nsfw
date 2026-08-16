@@ -30,6 +30,39 @@
       ]
     },
     {
+      "id": "pixel-ai-diary",
+      "title": "鲸鱼娘的AI冒险日志",
+      "author": "huangxin-design",
+      "date": "2026-08-16",
+      "tags": ["像素", "AI", "沙雕"],
+      "cover": "comics/pixel-ai-diary/p1.png",
+      "pages": [
+        "comics/pixel-ai-diary/p1.png",
+        "comics/pixel-ai-diary/p2.png",
+        "comics/pixel-ai-diary/p3.png",
+        "comics/pixel-ai-diary/p4.png",
+        "comics/pixel-ai-diary/p5.png",
+        "comics/pixel-ai-diary/p6.png",
+        "comics/pixel-ai-diary/p7.png",
+        "comics/pixel-ai-diary/p8.png",
+        "comics/pixel-ai-diary/p9.png",
+        "comics/pixel-ai-diary/p10.png"
+      ]
+    },
+    {
+      "id": "pixel-whale-adventures",
+      "title": "像素鲸鱼娘：三次技术冒险",
+      "author": "huangxin-design",
+      "date": "2026-08-16",
+      "tags": ["像素", "程序员", "沙雕"],
+      "cover": "comics/pixel-whale-adventures/p1.png",
+      "pages": [
+        "comics/pixel-whale-adventures/p1.png",
+        "comics/pixel-whale-adventures/p2.png",
+        "comics/pixel-whale-adventures/p3.png"
+      ]
+    },
+    {
       "id": "plugins-explode",
       "title": "大家的插件都会炸",
       "author": "CocoSgt",
