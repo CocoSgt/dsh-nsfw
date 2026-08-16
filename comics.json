@@ -1,6 +1,29 @@
 {
   "comics": [
     {
+      "id": "whale-girl-collection",
+      "title": "鲸鱼娘图鉴",
+      "author": "higashitaniyume",
+      "date": "2026-08-15",
+      "tags": [
+        "鲸鱼娘",
+        "表情包"
+      ],
+      "cover": "comics/whale-girl-collection/p3.jpg",
+      "pages": [
+        "comics/whale-girl-collection/p3.jpg",
+        "comics/whale-girl-collection/p4.jpg",
+        "comics/whale-girl-collection/p5.jpg",
+        "comics/whale-girl-collection/p6.jpg",
+        "comics/whale-girl-collection/p7.jpg",
+        "comics/whale-girl-collection/p9.jpg",
+        "comics/whale-girl-collection/p10.jpg",
+        "comics/whale-girl-collection/p12.jpg",
+        "comics/whale-girl-collection/p15.png",
+        "comics/whale-girl-collection/p16.png"
+      ]
+    },
+    {
       "id": "pixel-ai-diary",
       "title": "鲸鱼娘的AI冒险日志",
       "author": "huangxin-design",
