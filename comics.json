@@ -1,6 +1,19 @@
 {
   "comics": [
     {
+      "id": "pixel-whale-adventures",
+      "title": "像素鲸鱼娘：三次技术冒险",
+      "author": "huangxin-design",
+      "date": "2026-08-16",
+      "tags": ["像素", "程序员", "沙雕"],
+      "cover": "comics/pixel-whale-adventures/p1.png",
+      "pages": [
+        "comics/pixel-whale-adventures/p1.png",
+        "comics/pixel-whale-adventures/p2.png",
+        "comics/pixel-whale-adventures/p3.png"
+      ]
+    },
+    {
       "id": "plugins-explode",
       "title": "大家的插件都会炸",
       "author": "CocoSgt",
